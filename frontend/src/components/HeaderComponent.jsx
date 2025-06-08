@@ -22,7 +22,7 @@ function HeaderComponent() {
                         </li>
                     </ul>
                     <div>
-                        <p class="text-white bg-dark p-1">Bienvenido Chanchirata</p>
+                        <p className="text-white bg-dark p-1">Bienvenido Chanchirata</p>
                         <div className="text-white bg-dark p-1">
                             <a href="/">Salir</a>
                         </div> 
