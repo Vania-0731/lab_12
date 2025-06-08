@@ -9,6 +9,7 @@ import SerieFormPage from "./pages/SerieFormPage";
 import { SerieProvider } from "./context/SerieContext";
 import { CategoryProvider } from "./context/CategoryContext";
 import CategoryFormPage from "./pages/CategoryFormPage";
+import CategoryEditFormPage from "./pages/CategoryEditFormPage";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/series/create" element={<SerieFormPage />} />
                         <Route path="/series/edit/:idserie" element={<SerieFormPage />} />
                         <Route path="/categories/new" element={<CategoryFormPage />} />
+                        <Route path="/categories/edit/:id" element={<CategoryEditFormPage />} />
                     </Routes>
                 </CategoryProvider>
             </SerieProvider>
