@@ -6,14 +6,14 @@ import axios from "axios";
 function CategoryFormPage() {
   const navigate = useNavigate();
 
-  const [descripcion, setDescripcion] = useState("");
+  const [description, setDescripcion] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!descripcion.trim()) return;
+    if (!description.trim()) return;
 
     try {
-      const nuevaCategoria = {description: descripcion}
+      const nuevaCategoria = {description: description}
       await axios.post("http://localhost:8000/series/api/v1/categories/", nuevaCategoria);
       navigate("/categories");
     } catch (error) {
@@ -31,12 +31,12 @@ function CategoryFormPage() {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="inputNombre" className="form-label">Descripción</label>
+            <label htmlFor="inputDescription" className="form-label">Descripción</label>
             <input
               type="text"
               className="form-control"
-              id="inputNombre"
-              value={descripcion}
+              id="inputCategory"
+              value={description}
               onChange={(e) => setDescripcion(e.target.value)}
               required
             />
