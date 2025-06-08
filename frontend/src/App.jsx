@@ -22,7 +22,7 @@ function App() {
                         <Route path="/series" element={<SeriePage />} />
                         <Route path="/series/create" element={<SerieFormPage />} />
                         <Route path="/series/edit/:idserie" element={<SerieFormPage />} />
-						<Route path="/categories/edit/:id" element={<CategoryFormPage />} />
+                        <Route path="/categories/new" element={<CategoryFormPage />} />
                     </Routes>
                 </CategoryProvider>
             </SerieProvider>
