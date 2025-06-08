@@ -1,51 +1,49 @@
 import HeaderComponent from "../components/HeaderComponent";
-import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { SerieContext } from "../context/SerieContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function SerieFormPage() {
-  const { idserie } = useParams();
   const navigate = useNavigate();
-  const { series, setSeries } = useContext(SerieContext);
 
   const [nombre, setNombre] = useState("");
+  const [releaseDate, setReleaseDate] = useState("");
+  const [rating, setRating] = useState(0);
   const [categoria, setCategoria] = useState("");
   const [imagenURL, setImagenURL] = useState("");
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    if (idserie) {
-      const serieEdit = series.find((s) => s.cod === Number(idserie));
-      if (serieEdit) {
-        setNombre(serieEdit.nom);
-        setCategoria(serieEdit.cat);
-        setImagenURL(serieEdit.img);
+    async function fetchCategories() {
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/series/api/v1/categories/");
+        setCategorias(res.data);
+      } catch (error) {
+        console.error("Error al cargar categorías", error);
       }
     }
-  }, [idserie, series]);
+    fetchCategories();
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombre || !categoria) return;
+    if (!nombre || !categoria || !releaseDate) return;
 
-    if (idserie) {
-      const newSeries = series.map((s) =>
-        s.cod === Number(idserie)
-          ? { ...s, nom: nombre, cat: categoria, img: imagenURL }
-          : s
-      );
-      setSeries(newSeries);
-    } else {
-      const maxCod = series.reduce((max, s) => (s.cod > max ? s.cod : max), 0);
-      const nuevaSerie = {
-        cod: maxCod + 1,
-        nom: nombre,
-        cat: categoria,
-        img: imagenURL,
-      };
-      setSeries([...series, nuevaSerie]);
+    const dataToSend = {
+      name: nombre,
+      release_date: releaseDate,
+      rating: Number(rating),
+      category: categoria,
+      image: imagenURL.trim() || null,
+    };
+
+    try {
+      await axios.post("http://127.0.0.1:8000/series/api/v1/series/", dataToSend);
+      navigate("/series");
+    } catch (error) {
+      console.error("Error creando la serie", error);
+      alert("Hubo un error creando la serie.");
     }
-
-    navigate("/series");
   };
 
   const previewURL = imagenURL.trim()
@@ -57,7 +55,7 @@ function SerieFormPage() {
       <HeaderComponent />
       <div className="container mt-3">
         <div className="border-bottom pb-3 mb-3">
-          <h3>{idserie ? "Editar" : "Nuevo"} - Serie</h3>
+          <h3>Nueva Serie</h3>
         </div>
         <form className="row" onSubmit={handleSubmit}>
           <div className="col-md-4">
@@ -80,6 +78,32 @@ function SerieFormPage() {
                 required
               />
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="inputReleaseDate" className="form-label">Fecha de Lanzamiento</label>
+              <input
+                type="date"
+                className="form-control"
+                id="inputReleaseDate"
+                value={releaseDate}
+                onChange={(e) => setReleaseDate(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="inputRating" className="form-label">Rating</label>
+              <input
+                type="number"
+                className="form-control"
+                id="inputRating"
+                value={rating}
+                min={0}
+                max={10}
+                onChange={(e) => setRating(e.target.value)}
+              />
+            </div>
+
             <div className="mb-3">
               <label htmlFor="inputCategory" className="form-label">Categoría</label>
               <select
@@ -90,12 +114,17 @@ function SerieFormPage() {
                 required
               >
                 <option value="">Seleccione una opción</option>
-                <option value="Horror">Horror</option>
-                <option value="Comedy">Comedy</option>
-                <option value="Action">Action</option>
-                <option value="Drama">Drama</option>
+                {categorias.map((cat) => (
+                  <option
+                    key={cat.id}
+                    value={cat.url || `http://127.0.0.1:8000/series/api/v1/categories/${cat.id}/`}
+                  >
+                    {cat.description}
+                  </option>
+                ))}
               </select>
             </div>
+
             <div className="mb-3">
               <label htmlFor="inputImageURL" className="form-label">URL de la Imagen</label>
               <input
@@ -110,8 +139,9 @@ function SerieFormPage() {
                 Puedes pegar la URL de una imagen externa. Si está vacío, se usará una imagen dummy.
               </small>
             </div>
+
             <div className="mb-3">
-              <button className="btn btn-primary me-2" type="submit">Guardar</button>
+              <button className="btn btn-primary me-2" type="submit">Crear</button>
               <button
                 type="button"
                 className="btn btn-secondary"
