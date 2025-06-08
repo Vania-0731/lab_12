@@ -13,3 +13,6 @@ class Serie(models.Model):
 	release_date = models.DateField()
 	rating = models.IntegerField(default=0)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE)
+	image= models.URLField(max_length=500, blank=True, null=True)
+
+
