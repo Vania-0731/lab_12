@@ -1,24 +1,39 @@
 import HeaderComponent from "../components/HeaderComponent";
-import { useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
 
-function CategoryFormPage() {
+function CategoryEditFormPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [description, setDescripcion] = useState("");
+
+  useEffect(() => {
+    const fetchCategoria = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/series/api/v1/categories/${id}/`);
+        setDescripcion(response.data.description);
+      } catch (error) {
+        console.error("Error al obtener la categoría", error);
+        alert("No se pudo cargar la categoría.");
+      }
+    };
+
+    fetchCategoria();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!description.trim()) return;
 
     try {
-      const nuevaCategoria = {description: description}
-      await axios.post("http://localhost:8000/series/api/v1/categories/", nuevaCategoria);
+      const categoriaActualizada = { description };
+      await axios.put(`http://localhost:8000/series/api/v1/categories/${id}/`, categoriaActualizada);
       navigate("/categories");
     } catch (error) {
-      console.log("Error al crear la categoría.", error)
-      alert("Hubo un error al guardar la categoría.")
+      console.log("Error al actualizar la categoría.", error);
+      alert("Hubo un error al guardar los cambios.");
     }
   };
 
@@ -27,7 +42,7 @@ function CategoryFormPage() {
       <HeaderComponent />
       <div className="container mt-3">
         <div className="border-bottom pb-3 mb-3">
-          <h3>Nueva Categoría</h3>
+          <h3>Editar Categoría</h3>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -44,17 +59,13 @@ function CategoryFormPage() {
           <button className="btn btn-primary me-2" type="submit">
             Guardar
           </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => navigate("/categories")}
-          >
+          <Link to="/categories" className="btn btn-secondary">
             Cancelar
-          </button>
+          </Link>
         </form>
       </div>
     </>
   );
 }
 
-export default CategoryFormPage;
+export default CategoryEditFormPage;
