@@ -6,31 +6,25 @@ import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 import SeriePage from "./pages/SeriePage";
 import SerieFormPage from "./pages/SerieFormPage";
-import { SerieProvider } from "./context/SerieContext";
-import { CategoryProvider } from "./context/CategoryContext";
 import CategoryFormPage from "./pages/CategoryFormPage";
 import CategoryEditFormPage from "./pages/CategoryEditFormPage";
 import SerieEditFormPage from "./pages/SerieEditFormPage";
 
 function App() {
-    return (
-        <BrowserRouter>
-            <SerieProvider>
-                <CategoryProvider>
-                    <Routes>
-                        <Route path="/" element={<LoginPage />} />
-                        <Route path="/home" element={<HomePage />} />
-                        <Route path="/categories" element={<CategoryPage />} />
-                        <Route path="/series" element={<SeriePage />} />
-                        <Route path="/series/create" element={<SerieFormPage />} />
-                        <Route path="/series/edit/:idserie" element={<SerieEditFormPage />} />
-                        <Route path="/categories/new" element={<CategoryFormPage />} />
-                        <Route path="/categories/edit/:id" element={<CategoryEditFormPage />} />
-                    </Routes>
-                </CategoryProvider>
-            </SerieProvider>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/categories" element={<CategoryPage />} />
+        <Route path="/series" element={<SeriePage />} />
+        <Route path="/series/create" element={<SerieFormPage />} />
+        <Route path="/series/edit/:idserie" element={<SerieEditFormPage />} />
+        <Route path="/categories/new" element={<CategoryFormPage />} />
+        <Route path="/categories/edit/:id" element={<CategoryEditFormPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
