@@ -10,6 +10,7 @@ import { SerieProvider } from "./context/SerieContext";
 import { CategoryProvider } from "./context/CategoryContext";
 import CategoryFormPage from "./pages/CategoryFormPage";
 import CategoryEditFormPage from "./pages/CategoryEditFormPage";
+import SerieEditFormPage from "./pages/SerieEditFormPage";
 
 function App() {
     return (
@@ -22,7 +23,7 @@ function App() {
                         <Route path="/categories" element={<CategoryPage />} />
                         <Route path="/series" element={<SeriePage />} />
                         <Route path="/series/create" element={<SerieFormPage />} />
-                        <Route path="/series/edit/:idserie" element={<SerieFormPage />} />
+                        <Route path="/series/edit/:idserie" element={<SerieEditFormPage />} />
                         <Route path="/categories/new" element={<CategoryFormPage />} />
                         <Route path="/categories/edit/:id" element={<CategoryEditFormPage />} />
                     </Routes>
